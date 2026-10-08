@@ -585,6 +585,10 @@
           fromMin: toMin($('rt-t1').value, 0),
           toMin: toMin($('rt-t2').value, 1439)
         });
+        // Mode « De A à B » : affichage par heure de départ, puis arrivée la plus tôt, puis moins de correspondances
+        var byTime = function (a, b) { return (a.dep - b.dep) || (a.arr - b.arr) || (a.nCorr - b.nCorr); };
+        r.best = r.best.slice().sort(byTime);
+        r.journeys = r.journeys.slice().sort(byTime);
         route.res = { A: A, B: B, date: date, r: r };
         route.view = 'best';
         route.shown = PAGE;
@@ -614,8 +618,8 @@
       '<button role="tab" data-v="all" aria-selected="' + (route.view === 'all') + '">Toutes<span class="count">' + r.journeys.length.toLocaleString('fr-FR') + '</span></button>' +
       '</div><p class="res-sub" style="margin:0 4px 12px">' +
       (route.view === 'best'
-        ? 'Les trajets les plus pratiques, triés par nombre de correspondances puis par durée. Les autres combinaisons (partir plus tôt pour arriver plus tard, plus de changements…) sont dans l\'onglet « Toutes ».'
-        : 'Toutes les combinaisons possibles, triées par nombre de correspondances puis par durée.') +
+        ? 'Les trajets les plus pratiques, triés par heure de départ. Les autres combinaisons (partir plus tôt pour arriver plus tard, plus de changements…) sont dans l\'onglet « Toutes ».'
+        : 'Toutes les combinaisons possibles, triées par heure de départ.') +
       (r.truncated ? ' La recherche a été écourtée pour rester rapide : certaines combinaisons très longues peuvent manquer.' : '') +
       '</p><div class="journeys">';
     list.slice(0, route.shown).forEach(function (j) { h += journeyHTML(j); });
