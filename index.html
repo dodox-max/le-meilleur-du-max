@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Le meilleur du Max by DDX</title>
+  <meta name="description" content="Trouver les trains disponibles à 0 € avec l'abonnement MAX JEUNE.">
+  <meta name="theme-color" content="#3A5BFF">
+  <link rel="icon" href="assets/icone.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <h1 class="brand">
+        <span class="brand-main">Le meilleur du Max</span>
+        <span class="brand-tag">by DDX</span>
+      </h1>
+      <p class="fresh" id="fresh" aria-live="polite">Chargement des données…</p>
+    </div>
+    <div class="rail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  </header>
+
+  <nav class="tabs wrap" role="tablist" aria-label="Choisir une recherche">
+    <button role="tab" id="tab-explore" aria-controls="panel-explore" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>
+      Où puis-je aller ?
+    </button>
+    <button role="tab" id="tab-route" aria-controls="panel-route" aria-selected="false" tabindex="-1">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="6" r="2.5"/><path d="M7.5 18H14a3.5 3.5 0 0 0 0-7h-4a3.5 3.5 0 0 1 0-7h6.5"/></svg>
+      De A à B
+    </button>
+    <button role="tab" id="tab-alerts" aria-controls="panel-alerts" aria-selected="false" tabindex="-1">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+      Alertes
+    </button>
+  </nav>
+
+  <main class="wrap">
+    <!-- ============ Module 1 ============ -->
+    <section id="panel-explore" role="tabpanel" aria-labelledby="tab-explore">
+      <form class="card search" id="form-explore" autocomplete="off">
+        <div class="field">
+          <label for="ex-from">Je pars de</label>
+          <div class="combo" data-combo="ex-from">
+            <input id="ex-from" type="text" placeholder="Ex. Paris, Lyon, Bordeaux…" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label" id="ex-when-label">Quand ?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="ex-when-label">
+            <label><input type="radio" name="ex-mode" value="day" checked> Un jour</label>
+            <label><input type="radio" name="ex-mode" value="range"> Plusieurs jours</label>
+          </div>
+          <div class="dates">
+            <label class="date"><span id="ex-d1-label">Le</span><input type="date" id="ex-d1" required></label>
+            <label class="date" id="ex-d2-wrap" hidden><span>jusqu'au</span><input type="date" id="ex-d2"></label>
+          </div>
+          <div class="quick" id="ex-quick"></div>
+        </div>
+
+        <details class="more">
+          <summary>Affiner (horaires, durée, région)</summary>
+          <div class="more-grid">
+            <div class="field">
+              <span class="label">Départ entre</span>
+              <div class="time-range">
+                <input type="time" id="ex-t1" value="05:00" aria-label="Départ au plus tôt">
+                <span>et</span>
+                <input type="time" id="ex-t2" value="23:59" aria-label="Départ au plus tard">
+              </div>
+            </div>
+            <div class="field">
+              <label for="ex-dur">Durée du trajet</label>
+              <select id="ex-dur">
+                <option value="">Peu importe</option>
+                <option value="90">1 h 30 maximum</option>
+                <option value="120">2 h maximum</option>
+                <option value="180">3 h maximum</option>
+                <option value="240">4 h maximum</option>
+                <option value="360">6 h maximum</option>
+                <option value="480">8 h maximum</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="ex-region">Région d'arrivée</label>
+              <select id="ex-region"><option value="">Toutes les régions</option></select>
+            </div>
+          </div>
+        </details>
+
+        <button class="go" type="submit">Voir les destinations</button>
+      </form>
+
+      <div id="ex-results" class="results" aria-live="polite"></div>
+    </section>
+
+    <!-- ============ Module 2 ============ -->
+    <section id="panel-route" role="tabpanel" aria-labelledby="tab-route" hidden>
+      <form class="card search" id="form-route" autocomplete="off">
+        <div class="ab">
+          <div class="field">
+            <label for="rt-from">Départ</label>
+            <div class="combo" data-combo="rt-from">
+              <input id="rt-from" type="text" placeholder="Gare ou ville de départ" required>
+            </div>
+          </div>
+          <button type="button" class="swap" id="rt-swap" aria-label="Inverser départ et arrivée">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16m0 0-3-3m3 3 3-3M17 20V4m0 0-3 3m3-3 3 3"/></svg>
+          </button>
+          <div class="field">
+            <label for="rt-to">Arrivée</label>
+            <div class="combo" data-combo="rt-to">
+              <input id="rt-to" type="text" placeholder="Gare ou ville d'arrivée" required>
+            </div>
+          </div>
+        </div>
+        <div class="row2">
+          <label class="date"><span>Le</span><input type="date" id="rt-date" required></label>
+          <div class="field">
+            <span class="label">Départ entre</span>
+            <div class="time-range">
+              <input type="time" id="rt-t1" value="05:00" aria-label="Départ au plus tôt">
+              <span>et</span>
+              <input type="time" id="rt-t2" value="23:59" aria-label="Départ au plus tard">
+            </div>
+          </div>
+        </div>
+        <div class="quick" id="rt-quick"></div>
+        <button class="go" type="submit">Chercher les trains</button>
+      </form>
+
+      <div id="rt-results" class="results" aria-live="polite"></div>
+    </section>
+
+    <!-- ============ Alertes ============ -->
+    <section id="panel-alerts" role="tabpanel" aria-labelledby="tab-alerts" hidden>
+      <div id="al-off" class="notice" hidden>
+        Les alertes ne sont pas encore branchées. Suivez l'étape « Activer les alertes » du guide de mise en ligne.
+      </div>
+
+      <form class="card search" id="form-alert" autocomplete="off">
+        <h2 class="card-title">Prévenez-moi quand une place se libère</h2>
+        <p class="hint">Vous recevez un email dès qu'un train à 0 € apparaît sur ce trajet. Les données SNCF sont vérifiées après chaque mise à jour, en général une fois par jour, le matin.</p>
+        <div class="ab">
+          <div class="field">
+            <label for="al-from">Départ</label>
+            <div class="combo" data-combo="al-from"><input id="al-from" type="text" placeholder="Gare ou ville de départ" required></div>
+          </div>
+          <div class="field">
+            <label for="al-to">Arrivée</label>
+            <div class="combo" data-combo="al-to"><input id="al-to" type="text" placeholder="Gare ou ville d'arrivée" required></div>
+          </div>
+        </div>
+        <div class="row2">
+          <label class="date"><span>Le</span><input type="date" id="al-date" required></label>
+          <div class="field">
+            <span class="label">Départ entre <small>(facultatif)</small></span>
+            <div class="time-range">
+              <input type="time" id="al-t1" value="00:00" aria-label="Départ au plus tôt">
+              <span>et</span>
+              <input type="time" id="al-t2" value="23:59" aria-label="Départ au plus tard">
+            </div>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="al-corr" checked> Accepter les trajets avec correspondances</label>
+        <div class="field">
+          <label for="al-email">Mon adresse email</label>
+          <input id="al-email" type="email" placeholder="prenom@exemple.fr" required autocomplete="email">
+        </div>
+        <button class="go" type="submit">Créer l'alerte</button>
+        <p id="al-msg" class="form-msg" role="status"></p>
+      </form>
+
+      <form class="card search quiet" id="form-alert-list" autocomplete="off">
+        <h2 class="card-title">Supprimer une alerte</h2>
+        <p class="hint">Chaque email d'alerte contient un lien « Supprimer cette alerte ». Email perdu ? Indiquez votre adresse : vous recevrez la liste de vos alertes avec un lien de suppression pour chacune.</p>
+        <div class="field">
+          <label for="al-list-email">Mon adresse email</label>
+          <input id="al-list-email" type="email" placeholder="prenom@exemple.fr" required autocomplete="email">
+        </div>
+        <button class="go secondary" type="submit">Recevoir mes liens de suppression</button>
+        <p id="al-list-msg" class="form-msg" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="foot wrap">
+    <p>Données : open data SNCF « Disponibilité à 30 jours de places MAX JEUNE et MAX SENIOR » (licence ODbL), mises à jour par la SNCF une fois par jour. Les places affichées peuvent être parties entre-temps : vérifiez toujours au moment de réserver. Site personnel, sans lien avec la SNCF.</p>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/routing.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
