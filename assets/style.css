@@ -41,11 +41,11 @@ button, input, select { font: inherit; color: inherit; }
 .top-inner { padding-top: 22px; padding-bottom: 18px; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 16px; }
 .brand { margin: 0; font-family: var(--display); font-weight: 800; line-height: .95; letter-spacing: -.02em; font-size: clamp(30px, 7.5vw, 46px); display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
 .brand-tag {
-  font-family: var(--body); font-weight: 700; font-size: 15px; letter-spacing: 0;
-  background: var(--sun); color: var(--ink); padding: 5px 12px 5px 14px; border-radius: 6px;
+  font-family: var(--body); font-weight: 700; font-size: clamp(20px, 5.5vw, 30px); letter-spacing: 0;
+  background: var(--sun); color: var(--ink); padding: 6px 16px 6px 20px; border-radius: 8px;
   transform: rotate(-4deg); position: relative;
-  -webkit-mask: radial-gradient(circle 5px at 0 50%, transparent 4.5px, #000 5px);
-          mask: radial-gradient(circle 5px at 0 50%, transparent 4.5px, #000 5px);
+  -webkit-mask: radial-gradient(circle 7px at 0 50%, transparent 6.5px, #000 7px);
+          mask: radial-gradient(circle 7px at 0 50%, transparent 6.5px, #000 7px);
 }
 .fresh { margin: 0; font-size: 14px; opacity: .92; }
 .fresh strong { font-weight: 700; }
